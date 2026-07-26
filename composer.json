@@ -8,8 +8,8 @@
         "illuminate/support": "^12.0",
         "illuminate/database": "^12.0",
         "illuminate/http": "^12.0",
-        "varsite/platform": "^0.4",
-        "varsite/catalog": "^0.4"
+        "varsite/platform": "^0.5",
+        "varsite/catalog": "^0.5"
     },
     "autoload": {
         "psr-4": {
