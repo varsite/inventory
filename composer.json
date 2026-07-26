@@ -1,0 +1,31 @@
+{
+    "name": "varsite/inventory",
+    "description": "Magazyn dla Varsite Platform — stany wyliczane z rejestru ruchów.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.3",
+        "illuminate/support": "^12.0",
+        "illuminate/database": "^12.0",
+        "illuminate/http": "^12.0",
+        "varsite/platform": "^0.4",
+        "varsite/catalog": "^0.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Varsite\\Inventory\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Varsite\\Inventory\\InventoryServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-main": "0.3.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
