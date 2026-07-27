@@ -31,44 +31,47 @@ final class InventoryServiceProvider extends ServiceProvider
     {
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
-        $this->app->make(ModuleManager::class)->register(new InventoryModule());
+        $this->app->make(ModuleManager::class)->module(
+            new InventoryModule(),
+            function (): void {
+            // Nadpisanie pustej implementacji katalogu prawdziwym źródłem faktu.
+            $this->app->singleton(StockProvider::class, StockLedger::class);
+            $this->app->singleton(StockLedger::class);
 
-        // Nadpisanie pustej implementacji katalogu prawdziwym źródłem faktu.
-        $this->app->singleton(StockProvider::class, StockLedger::class);
-        $this->app->singleton(StockLedger::class);
+            $this->app->make(ModuleRouteRegistrar::class)
+                ->register('inventory', require __DIR__.'/../routes/admin.php');
 
-        $this->app->make(ModuleRouteRegistrar::class)
-            ->register('inventory', require __DIR__.'/../routes/admin.php');
-
-        $this->app->make(CapabilityRegistry::class)->register(
-            ResourceCapability::make('inventory.movements')
-                ->label('Ruch magazynowy', 'Ruchy magazynowe')
-                ->icon('warehouse')
-                ->endpoint('/v1/admin/inventory/movements')
-                ->permission('inventory.view')
-                ->columns([
-                    Column::text('sku')->label('SKU')->sortable()->primary(),
-                    Column::status('type', MovementType::tones())->label('Rodzaj'),
-                    Column::number('quantity')->label('Ilość'),
-                    Column::badge('location')->label('Lokalizacja'),
-                    Column::date('created_at')->label('Data')->sortable(),
-                ])
-                ->filters([
-                    Filter::search(['sku']),
-                    Filter::segmented('type', ['all' => 'Wszystkie'] + MovementType::options()),
-                ])
-                ->form([
-                    Field::text('sku')->label('SKU')->required()
-                        ->hint('Identyfikator pozycji — ten sam co w katalogu.'),
-                    Field::select('type', MovementType::options())->label('Rodzaj')->required(),
-                    Field::number('quantity')->label('Ilość')->required()
-                        ->hint('Wydanie zapisuje się jako wartość ujemna automatycznie.'),
-                    Field::text('location')->label('Lokalizacja')->hint('Domyślnie „default”.'),
-                    Field::text('reason')->label('Uzasadnienie'),
-                ])
-                // Bez akcji edycji i usuwania: rejestr jest append-only,
-                // a pomyłkę prostuje się korektą, która zostaje w historii.
-                ->actions([]),
+            $this->app->make(CapabilityRegistry::class)->register(
+                ResourceCapability::make('inventory.movements')
+                    ->label('Ruch magazynowy', 'Ruchy magazynowe')
+                    ->icon('warehouse')
+                    ->endpoint('/v1/admin/inventory/movements')
+                    ->permission('inventory.view')
+                    ->columns([
+                        Column::text('sku')->label('SKU')->sortable()->primary(),
+                        Column::status('type', MovementType::tones())->label('Rodzaj'),
+                        Column::number('quantity')->label('Ilość'),
+                        Column::badge('location')->label('Lokalizacja'),
+                        Column::date('created_at')->label('Data')->sortable(),
+                    ])
+                    ->filters([
+                        Filter::search(['sku']),
+                        Filter::segmented('type', ['all' => 'Wszystkie'] + MovementType::options()),
+                    ])
+                    ->form([
+                        Field::text('sku')->label('SKU')->required()
+                            ->hint('Identyfikator pozycji — ten sam co w katalogu.'),
+                        Field::select('type', MovementType::options())->label('Rodzaj')->required(),
+                        Field::number('quantity')->label('Ilość')->required()
+                            ->hint('Wydanie zapisuje się jako wartość ujemna automatycznie.'),
+                        Field::text('location')->label('Lokalizacja')->hint('Domyślnie „default”.'),
+                        Field::text('reason')->label('Uzasadnienie'),
+                    ])
+                    // Bez akcji edycji i usuwania: rejestr jest append-only,
+                    // a pomyłkę prostuje się korektą, która zostaje w historii.
+                    ->actions([]),
+            );
+            },
         );
     }
 }
