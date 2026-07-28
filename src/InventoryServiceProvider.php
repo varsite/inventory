@@ -43,7 +43,7 @@ final class InventoryServiceProvider extends ServiceProvider
 
             $this->app->make(CapabilityRegistry::class)->register(
                 ResourceCapability::make('inventory.movements')
-                    ->label('Ruch magazynowy', 'Ruchy magazynowe')
+                    ->label('Ruch magazynowy', 'Magazyn')
                     ->icon('warehouse')
                     ->endpoint('/v1/admin/inventory/movements')
                     ->permission('inventory.view')
