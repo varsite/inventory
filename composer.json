@@ -8,8 +8,8 @@
         "illuminate/support": "^12.0|^13.0",
         "illuminate/database": "^12.0|^13.0",
         "illuminate/http": "^12.0|^13.0",
-        "varsite/platform": "^0.10",
-        "varsite/catalog": "^0.10"
+        "varsite/platform": "^0.11",
+        "varsite/catalog": "^0.11"
     },
     "autoload": {
         "psr-4": {
@@ -23,7 +23,7 @@
             ]
         },
         "branch-alias": {
-            "dev-main": "0.3.x-dev"
+            "dev-main": "0.6.x-dev"
         }
     },
     "minimum-stability": "dev",
